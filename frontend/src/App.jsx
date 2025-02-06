@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { Global, css } from '@emotion/react';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
-import Login from './pages/Login';
+import Login from './pages/login';
 import Dashboard from './pages/Dashboard';
 import Community from './pages/Community';
 import PillDispenser from './pages/PillDispenser';
@@ -14,6 +14,9 @@ import HealthRecords from './pages/HealthRecords';
 import EmergencyContacts from './pages/EmergencyContacts';
 import Telemedicine from './pages/Telemedicine';
 import Nutrition from './pages/Nutrition';
+import Signup from './pages/signup';
+import CreateProfile from './pages/CreateProfile';
+import ChatBot from './pages/chatBot';
 
 const theme = createTheme({
   palette: {
@@ -95,9 +98,13 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="chatbot" element={<ChatBot />} />
           <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/details" element={<CreateProfile/>}/>
             <Route path="/app" element={<Layout />}>
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="chatbot" element={<ChatBot/>}/>
               <Route path="community" element={<Community />} />
               <Route path="pill-dispenser" element={<PillDispenser />} />
               <Route path="profile" element={<Profile />} />

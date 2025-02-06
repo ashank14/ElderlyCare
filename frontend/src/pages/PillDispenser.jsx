@@ -1,124 +1,84 @@
-import { useState, useEffect } from "react"
+import { useState } from "react";
+import axios from "axios";
 import {
+  Box,
   Container,
   Typography,
   Grid,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material"
+  TextField,
+} from "@mui/material";
+
+const MedCard = ({ med, setMed }) => {
+  return (
+    <Box sx={{ mt: 5, gap: "50px" }}>
+      <Typography>Enter Medicine Name</Typography>
+      <TextField
+        label="Name"
+        variant="outlined"
+        value={med.name}
+        onChange={(e) => setMed((prev) => ({ ...prev, name: e.target.value }))}
+      />
+      <TextField
+        label="Time"
+        type="time"
+        variant="outlined"
+        value={med.time}
+        onChange={(e) => {
+          setMed((prev) => ({ ...prev, time: e.target.value }));
+          console.log(med.time);
+        }}
+      />
+    </Box>
+  );
+};
 
 const PillDispenser = () => {
-  const [medications, setMedications] = useState([
-    { id: 1, name: "Blood Pressure Medication", time: "08:00", dispensed: false },
-    { id: 2, name: "Vitamin D Supplement", time: "12:00", dispensed: false },
-    { id: 3, name: "Cholesterol Medication", time: "18:00", dispensed: false },
-  ])
+  const [med1, setMed1] = useState({ name: "", time: "" });
+  const [med2, setMed2] = useState({ name: "", time: "" });
+  const [med3, setMed3] = useState({ name: "", time: "" });
+  const [med4, setMed4] = useState({ name: "", time: "" });
 
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const [alarmDialogOpen, setAlarmDialogOpen] = useState(false)
-  const [currentMedication, setCurrentMedication] = useState(null)
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:8000/api/user/setSchedule", {
+        med1,
+        med2,
+        med3,
+        med4,
+      });
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [])
-
-  useEffect(() => {
-    const checkMedications = () => {
-      const currentTimeString = currentTime.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })
-      const medicationDue = medications.find((med) => med.time === currentTimeString && !med.dispensed)
-
-      if (medicationDue) {
-        setCurrentMedication(medicationDue)
-        setAlarmDialogOpen(true)
-        // Simulate sending alert to the dispenser
-        console.log(`Sending alert to dispense ${medicationDue.name}`)
-      }
+      console.log("Schedule updated:", response.data);
+      alert("Schedule updated successfully!");
+    } catch (error) {
+      console.error("Error updating schedule:", error);
+      alert("Failed to update schedule.");
     }
-
-    checkMedications()
-  }, [currentTime, medications])
-
-  const handleDispenseMedication = () => {
-    setMedications(medications.map((med) => (med.id === currentMedication.id ? { ...med, dispensed: true } : med)))
-    setAlarmDialogOpen(false)
-  }
-
-  const resetDispenser = () => {
-    setMedications(medications.map((med) => ({ ...med, dispensed: false })))
-  }
+  };
 
   return (
     <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>
-        Pill Dispenser
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Medication Schedule
-            </Typography>
-            <List>
-              {medications.map((medication) => (
-                <ListItem key={medication.id}>
-                  <ListItemText primary={medication.name} secondary={`Scheduled for ${medication.time}`} />
-                  {medication.dispensed ? (
-                    <Typography variant="body2" color="text.secondary">
-                      Dispensed
-                    </Typography>
-                  ) : (
-                    <Typography variant="body2" color="primary">
-                      Pending
-                    </Typography>
-                  )}
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Current Time
-            </Typography>
-            <Typography variant="h4">{currentTime.toLocaleTimeString()}</Typography>
-            <Button variant="contained" color="secondary" onClick={resetDispenser} sx={{ mt: 2 }}>
-              Reset Dispenser for Next Day
-            </Button>
-          </Paper>
+      <Grid container sx={{ml:0}}>
+        <Typography variant="h4" gutterBottom>
+          Pill Dispenser
+        </Typography>
+        <Grid sx={{ml:-25}}>
+          <MedCard med={med1} setMed={setMed1} />
+          <MedCard med={med2} setMed={setMed2} />
+          <MedCard med={med3} setMed={setMed3} />
+          <MedCard med={med4} setMed={setMed4} />
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ ml: 13, mt: 3 }}
+            onClick={handleSubmit}
+          >
+            Add to Pill Dispenser
+          </Button>
         </Grid>
       </Grid>
-
-      <Dialog open={alarmDialogOpen} onClose={() => setAlarmDialogOpen(false)}>
-        <DialogTitle>Medication Alert</DialogTitle>
-        <DialogContent>
-          <Typography>It's time to take your {currentMedication?.name}.</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setAlarmDialogOpen(false)}>Dismiss</Button>
-          <Button onClick={handleDispenseMedication} autoFocus>
-            Dispense Medication
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Container>
-  )
-}
+  );
+};
 
-export default PillDispenser
-
+export default PillDispenser;

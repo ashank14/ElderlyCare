@@ -3,12 +3,17 @@ import cors from "cors"
 import router from "./routes/router.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import passport from "./config/passport.js";
+
 
 dotenv.config();
 
 const app=express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
+app.use(passport.initialize());
 
 const dbURI = process.env.MONGO_URI;
 console.log(dbURI);

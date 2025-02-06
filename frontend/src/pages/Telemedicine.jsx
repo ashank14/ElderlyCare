@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import {
   Container,
   Typography,
@@ -13,27 +13,37 @@ import {
   DialogContentText,
   DialogActions,
   TextField,
-} from "@mui/material"
+} from "@mui/material";
 
 const Telemedicine = () => {
-  const [open, setOpen] = useState(false)
-  const [selectedDoctor, setSelectedDoctor] = useState(null)
+  const [open, setOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [scheduledAppointments, setScheduledAppointments] = useState([]);
+  const [appointmentDetails, setAppointmentDetails] = useState({ date: "", time: "" });
 
   const doctors = [
     { id: 1, name: "Dr. Sarah Johnson", specialty: "General Practitioner", available: true },
     { id: 2, name: "Dr. Michael Chen", specialty: "Cardiologist", available: false },
     { id: 3, name: "Dr. Emily Brown", specialty: "Neurologist", available: true },
     { id: 4, name: "Dr. David Wilson", specialty: "Dermatologist", available: true },
-  ]
+  ];
 
   const handleClickOpen = (doctor) => {
-    setSelectedDoctor(doctor)
-    setOpen(true)
-  }
+    setSelectedDoctor(doctor);
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+    setAppointmentDetails({ date: "", time: "" });
+  };
+
+  const handleSchedule = () => {
+    if (appointmentDetails.date && appointmentDetails.time) {
+      setScheduledAppointments([...scheduledAppointments, { ...selectedDoctor, ...appointmentDetails }]);
+    }
+    handleClose();
+  };
 
   return (
     <Container maxWidth="lg">
@@ -79,37 +89,56 @@ const Telemedicine = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="date"
             label="Date"
             type="date"
             fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true }}
+            value={appointmentDetails.date}
+            onChange={(e) => setAppointmentDetails({ ...appointmentDetails, date: e.target.value })}
           />
           <TextField
             margin="dense"
-            id="time"
             label="Time"
             type="time"
             fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true }}
+            value={appointmentDetails.time}
+            onChange={(e) => setAppointmentDetails({ ...appointmentDetails, time: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleSchedule} color="primary">
             Schedule
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Typography variant="h4" gutterBottom sx={{ marginTop: 4 }}>
+        Scheduled Consultations
+      </Typography>
+      <Grid container spacing={3}>
+        {scheduledAppointments.map((appointment, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  {appointment.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {appointment.specialty}
+                </Typography>
+                <Typography variant="body2">Date: {appointment.date}</Typography>
+                <Typography variant="body2">Time: {appointment.time}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default Telemedicine
-
+export default Telemedicine;

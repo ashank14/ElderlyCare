@@ -1,6 +1,7 @@
 import { Link, Outlet } from "react-router-dom"
 import { styled } from "@mui/material/styles"
 import { motion } from "framer-motion"
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import {
   Box,
   Drawer,
@@ -88,6 +89,8 @@ const Layout = () => {
                 { text: "Emergency Contacts", icon: <ContactPhone />, link: "/app/emergency-contacts" },
                 { text: "Telemedicine", icon: <Videocam />, link: "/app/telemedicine" },
                 { text: "Nutrition", icon: <Restaurant />, link: "/app/nutrition" },
+                { text: "ChatBot", icon: <SmartToyIcon/>, link: "/app/chatbot" },
+
               ].map((item, index) => (
                 <MotionListItem
                   button
@@ -101,7 +104,7 @@ const Layout = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <ListItemIcon sx={{ color: "white" }}>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
+                  <ListItemText primary={item.text} sx={{color:"white"}}/>
                 </MotionListItem>
               ))}
             </List>
