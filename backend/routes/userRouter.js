@@ -483,7 +483,7 @@ userRouter.post("/addHealth", async (req, res) => {
 
 // Store medicine schedule
 let medicineSchedule = {
-    med1: { name: "Paracetamol", time: "18:00" },
+    med1: { name: "Paracetamol", time: "09:57" },
     med2: { name: "Aspirin", time: "18:03" },
     med3: { name: "Vitamin C", time: "16:00" },
     med4: { name: "Ibuprofen", time: "20:00" }

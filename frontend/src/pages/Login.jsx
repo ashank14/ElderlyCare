@@ -29,14 +29,18 @@ function Login({ setIsLoggedIn }) {
     window.location.href = "http://localhost:8000/api/user/google";
   };
 
+    const handleSignup = async () => {
+    const res = await axios.post("http://localhost:5000/signup", { email, username });
+    setUserId(res.data.userId);
+    setWaiting(true);
+  };
+
+  
+
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/user/login", {
-        email,
-        password,
-      });
-      setMessage(response.data.msg);
+      
       setIsLoggedIn(true);
       navigate("/app/dashboard");
     } catch (err) {
@@ -98,9 +102,7 @@ function Login({ setIsLoggedIn }) {
             <p className="text-center fw-bold mx-3 mb-0">OR</p>
           </div>
 
-          <MDBBtn className="mb-4 w-100" size="lg" style={{ backgroundColor: "#3b5998" }}>
-            <FaFacebookF className="mx-2" /> Continue with Facebook
-          </MDBBtn>
+         
 
           <MDBBtn className="mb-4 w-100" size="lg" style={{ backgroundColor: "#55acee" }} onClick={handleGoogleLogin}>
             <FaGoogle className="mx-2" /> Continue with Google

@@ -31,7 +31,7 @@ const MotionCard = motion(Card)
 
 const LandingPage = () => {
   return (
-    <Box sx={{ backgroundColor: "background.default", minHeight: "100vh" }}>
+    <Box sx={{ backgroundColor: "background.default", minHeight: "100vh"}}>
       <AppBar position="static" sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
